@@ -1,25 +1,56 @@
 package com.game.entity;
 
+
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "player")
 public class Player {
-    private Long id;
-    private String name;
-    private String title;
-    private Race race;
-    private Profession profession;
-    private Integer experience;
-    private Integer level;
-    private Integer untilNextLevel;
-    private Date birthday;
-    private Boolean banned;
+
+    public Player(String name, String title, Race race, Profession profession,
+                  Integer experience, Integer level, Integer untilNextLevel, Date birthday, Boolean banned) {
+        this.name = name;
+        this.title = title;
+        this.race = race;
+        this.profession = profession;
+        this.experience = experience;
+        this.level = level;
+        this.untilNextLevel = untilNextLevel;
+        this.birthday = birthday;
+        this.banned = banned;
+    }
+
+    public Player() {
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "name")
+    private String name;
+    @Column(name = "title")
+    private String title;
+    @Column(name = "race")
+    @Enumerated(EnumType.STRING)
+    private Race race;
+    @Column(name = "profession")
+    @Enumerated(EnumType.STRING)
+    private Profession profession;
+    @Column(name = "experience")
+    private Integer experience;
+    @Column(name = "level")
+    private Integer level;
+    @Column(name = "untilNextLevel")
+    private Integer untilNextLevel;
+    @Column(name = "birthday")
+    private Date birthday;
+    @Column(name = "banned")
+    private Boolean banned;
+
+
     public Long getId() {
         return id;
     }
@@ -28,7 +59,6 @@ public class Player {
         this.id = id;
     }
 
-    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -37,7 +67,6 @@ public class Player {
         this.name = name;
     }
 
-    @Column(name = "title")
     public String getTitle() {
         return title;
     }
@@ -46,8 +75,6 @@ public class Player {
         this.title = title;
     }
 
-    @Column(name = "race")
-    @Enumerated(EnumType.STRING)
     public Race getRace() {
         return race;
     }
@@ -56,8 +83,6 @@ public class Player {
         this.race = race;
     }
 
-    @Column(name = "profession")
-    @Enumerated(EnumType.STRING)
     public Profession getProfession() {
         return profession;
     }
@@ -66,7 +91,6 @@ public class Player {
         this.profession = profession;
     }
 
-    @Column(name = "experience")
     public Integer getExperience() {
         return experience;
     }
@@ -75,7 +99,6 @@ public class Player {
         this.experience = experience;
     }
 
-    @Column(name = "level")
     public Integer getLevel() {
         return level;
     }
@@ -84,7 +107,6 @@ public class Player {
         this.level = level;
     }
 
-    @Column(name = "untilNextLevel")
     public Integer getUntilNextLevel() {
         return untilNextLevel;
     }
@@ -93,8 +115,6 @@ public class Player {
         this.untilNextLevel = untilNextLevel;
     }
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "birthday")
     public Date getBirthday() {
         return birthday;
     }
@@ -103,8 +123,7 @@ public class Player {
         this.birthday = birthday;
     }
 
-    @Column(name = "banned")
-    public Boolean getBanned() {
+    public Boolean isBanned() {
         return banned;
     }
 
@@ -127,4 +146,6 @@ public class Player {
                 ", banned=" + banned +
                 '}';
     }
+
+
 }

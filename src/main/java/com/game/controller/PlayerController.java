@@ -1,90 +1,97 @@
 package com.game.controller;
 
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.game.entity.Player;
+
+import com.game.entity.Profession;
+import com.game.entity.Race;
+import com.game.service.PlayerService;
+import com.game.service.SearchCriteria;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 
 @RestController
 public class PlayerController {
 
+    private final PlayerService playerService;
+
+    @Autowired
+    public PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
+    }
+
     @GetMapping(value = "/rest/players")
-    public String getPlayersList(@RequestParam(name = "name", required = false) String name,
-                                 @RequestParam(name = "title", required = false) String title,
-                                 @RequestParam(name = "race", required = false) String race,
-                                 @RequestParam(name = "profession", required = false) String profession,
-                                 @RequestParam(name = "after", required = false) String after,
-                                 @RequestParam(name = "before", required = false) String before,
-                                 @RequestParam(name = "banned", required = false) String banned,
-                                 @RequestParam(name = "minExperience", required = false) String minExperience,
-                                 @RequestParam(name = "maxExperience", required = false) String maxExperience,
-                                 @RequestParam(name = "minLevel", required = false) String minLevel,
-                                 @RequestParam(name = "maxLevel", required = false) String maxLevel,
-                                 @RequestParam(name = "order", required = false, defaultValue = "ID") String order,
-                                 @RequestParam(name = "pageNumber", required = false, defaultValue = "0") String pageNumber,
-                                 @RequestParam(name = "pageSize", required = false, defaultValue = "3") String pageSize,
-                                 Model model) {
+    public ResponseEntity<List<Player>> getAll(@RequestParam(name = "pageNumber", defaultValue = "0") int page,
+                                               @RequestParam(name = "pageSize", defaultValue = "3") int size,
+                                               @RequestParam(name = "order", defaultValue = "ID") PlayerOrder order,
+                                               @RequestParam(name = "banned", required = false) Boolean banned,
+                                               @RequestParam(name = "name", required = false) String name,
+                                               @RequestParam(name = "title", required = false) String title,
+                                               @RequestParam(name = "race", required = false) Race race,
+                                               @RequestParam(name = "profession", required = false) Profession profession,
+                                               @RequestParam(name = "minLevel", required = false) Integer minLevel,
+                                               @RequestParam(name = "maxLevel", required = false) Integer maxLevel,
+                                               @RequestParam(name = "minExperience", required = false) Integer minExperience,
+                                               @RequestParam(name = "maxExperience", required = false) Integer maxExperience,
+                                               @RequestParam(name = "before", required = false) Long before,
+                                               @RequestParam(name = "after", required = false) Long after
+    ) {
+        Pageable pageable = playerService.getPageable(page, size, order);
+        List<SearchCriteria> filters = playerService.getFilters(banned, name, title, race, profession, minLevel, maxLevel,
+                minExperience, maxExperience, before, after);
 
-        System.out.println("--------------getPlayersList----------------");
-        System.out.println("name=" + name);
-        System.out.println("title=" + title);
-        System.out.println("race=" + race);
-        System.out.println("profession=" + profession);
-        System.out.println("after=" + after);
-        System.out.println("before=" + before);
-        System.out.println("banned=" + banned);
-        System.out.println("minExperience=" + minExperience);
-        System.out.println("maxExperience=" + maxExperience);
-        System.out.println("minLevel=" + minLevel);
-        System.out.println("maxLevel=" + maxLevel);
-        System.out.println("order=" + order);
-        System.out.println("pageNumber=" + pageNumber);
-        System.out.println("pageSize=" + pageSize);
-        System.out.println("------------------------------");
-
-        return "index";
+        return playerService.getAll(filters, pageable);
     }
 
-    @GetMapping(value ="/rest/players/count")
-    public String getPlayersCount(@RequestParam(name = "name", required = false) String name,
-                                 @RequestParam(name = "title", required = false) String title,
-                                 @RequestParam(name = "race", required = false) String race,
-                                 @RequestParam(name = "profession", required = false) String profession,
-                                 @RequestParam(name = "after", required = false) String after,
-                                 @RequestParam(name = "before", required = false) String before,
-                                 @RequestParam(name = "banned", required = false) String banned,
-                                 @RequestParam(name = "minExperience", required = false) String minExperience,
-                                 @RequestParam(name = "maxExperience", required = false) String maxExperience,
-                                 @RequestParam(name = "minLevel", required = false) String minLevel,
-                                 @RequestParam(name = "maxLevel", required = false) String maxLevel,
-                                 Model model) {
+    @GetMapping(value = "/rest/players/count")
+    public ResponseEntity<Integer> getPlayersCount(@RequestParam(name = "pageNumber", defaultValue = "0") int page,
+                                                   @RequestParam(name = "pageSize", defaultValue = "3") int size,
+                                                   @RequestParam(name = "order", defaultValue = "ID") PlayerOrder order,
+                                                   @RequestParam(name = "banned", required = false) Boolean banned,
+                                                   @RequestParam(name = "name", required = false) String name,
+                                                   @RequestParam(name = "title", required = false) String title,
+                                                   @RequestParam(name = "race", required = false) Race race,
+                                                   @RequestParam(name = "profession", required = false) Profession profession,
+                                                   @RequestParam(name = "minLevel", required = false) Integer minLevel,
+                                                   @RequestParam(name = "maxLevel", required = false) Integer maxLevel,
+                                                   @RequestParam(name = "minExperience", required = false) Integer minExperience,
+                                                   @RequestParam(name = "maxExperience", required = false) Integer maxExperience,
+                                                   @RequestParam(name = "before", required = false) Long before,
+                                                   @RequestParam(name = "after", required = false) Long after) {
+        Pageable pageable = playerService.getPageable(page, size, order);
 
-        System.out.println("-------------------getPlayersCount------------------");
-        System.out.println("name=" + name);
-        System.out.println("title=" + title);
-        System.out.println("race=" + race);
-        System.out.println("profession=" + profession);
-        System.out.println("after=" + after);
-        System.out.println("before=" + before);
-        System.out.println("banned=" + banned);
-        System.out.println("minExperience=" + minExperience);
-        System.out.println("maxExperience=" + maxExperience);
-        System.out.println("minLevel=" + minLevel);
-        System.out.println("maxLevel=" + maxLevel);
-        System.out.println("------------------------------");
-
-        return "index";
+        List<SearchCriteria> filters = playerService.getFilters(banned, name, title, race, profession, minLevel, maxLevel,
+                minExperience, maxExperience, before, after);
+        return playerService.getPlayersCount(filters, pageable);
     }
 
-    @RequestMapping(value ="/rest/players/{id}")
-    public String getPlayer(@RequestParam(name = "id", required = true) String id,
-                                  Model model) {
 
-        System.out.println("----------------getPlayer---------------------");
-        System.out.println("id=" + id);
-        System.out.println("------------------------------");
-
-        return "index";
+    @PostMapping(value = "/rest/players")
+    public ResponseEntity<Player> createPlayer(@RequestBody Player player) {
+        return playerService.createPlayer(player);
     }
+
+    @GetMapping(value = "/rest/players/{id}")
+    public ResponseEntity<?> getPlayerByID(@PathVariable(name = "id") String id) {
+        return playerService.getPlayerByID(id);
+    }
+
+    @PostMapping(value = "/rest/players/{id}")
+    public ResponseEntity<?> updatePlayerByID(@PathVariable(name = "id") String id,
+                                              @RequestBody Player player) {
+        return playerService.updatePlayerByID(id, player);
+    }
+
+    @DeleteMapping(value = "/rest/players/{id}")
+    public ResponseEntity<?> deletePlayerById(@PathVariable(name = "id") String id) {
+        return playerService.deletePlayerById(id);
+    }
+
+
 }
